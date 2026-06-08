@@ -1,0 +1,458 @@
+<?php
+/** @var array $bubbles $grants $users $qualities $effectTypes */
+$pageTitle = '气泡管理';
+require dirname(__DIR__) . '/layouts/main.php';
+$bubbleRows = json_encode($bubbles, JSON_UNESCAPED_UNICODE);
+$qualityRows = json_encode($qualities, JSON_UNESCAPED_UNICODE);
+$userRows = json_encode($users, JSON_UNESCAPED_UNICODE);
+$effectTypesJson = json_encode($effectTypes, JSON_UNESCAPED_UNICODE);
+?>
+
+<div class="admin-panel">
+  <h2>聊天气泡特效管理</h2>
+  <?php if ($error): ?><div class="alert alert-error"><?= htmlspecialchars($error) ?></div><?php endif; ?>
+  <?php if ($message): ?><div class="alert alert-success"><?= htmlspecialchars($message) ?></div><?php endif; ?>
+
+  <div class="af-tabs-card" id="bubbleTabsCard">
+    <div class="af-tabs">
+      <button class="af-tab active" data-tab="list">气泡列表</button>
+      <button class="af-tab" data-tab="create">新增气泡</button>
+      <button class="af-tab" data-tab="quality">品质配置</button>
+      <button class="af-tab" data-tab="grant">授予用户</button>
+      <button class="af-tab" data-tab="history">授予记录</button>
+    </div>
+
+    <!-- 气泡列表 -->
+    <div class="af-panel active" data-panel="list">
+      <div class="table-responsive">
+        <table class="table">
+          <thead><tr>
+            <th>预览</th><th>编码</th><th>名称</th><th>特效</th><th>品质</th><th>规则</th><th>拥有/装备</th><th>状态</th><th>操作</th>
+          </tr></thead>
+          <tbody>
+          <?php if (empty($bubbles)): ?>
+            <tr><td colspan="9" class="text-center text-muted">暂无气泡</td></tr>
+          <?php else: foreach ($bubbles as $b): ?>
+            <tr>
+              <td><div class="bubble-preview-mini" data-effect="<?= htmlspecialchars($b['effect_type'] ?? '') ?>" data-params="<?= htmlspecialchars($b['effect_params'] ?? '{}') ?>" style="width:48px;height:32px;border-radius:12px;border:1px solid var(--line-soft,#e2e8f0);overflow:hidden;position:relative;background:#f8fafc"></div></td>
+              <td><code><?= htmlspecialchars($b['code']) ?></code></td>
+              <td><?= htmlspecialchars($b['name']) ?></td>
+              <td><?php
+                $et = $effectTypes[$b['effect_type'] ?? ''] ?? null;
+                echo $et ? '<span style="color:'.$b['quality_color'].'">'.$et['name'].'</span>' : '<span class="text-muted">-</span>';
+              ?></td>
+              <td><span class="status-badge" style="background:<?= htmlspecialchars($b['quality_color']) ?>20;color:<?= htmlspecialchars($b['quality_color']) ?>"><?= htmlspecialchars($b['quality_name']) ?></span></td>
+              <td><?= htmlspecialchars($b['rule_type']) ?>:<?= (int)$b['rule_value'] ?></td>
+              <td><?= (int)$b['owner_count'] ?> / <?= (int)$b['equipped_count'] ?></td>
+              <td><span class="status-<?= $b['status'] === 'active' ? 'approved' : 'rejected' ?>"><?= $b['status'] === 'active' ? '启用' : '停用' ?></span></td>
+              <td>
+                <button class="btn btn-sm" onclick="editBubble(<?= (int)$b['id'] ?>)">编辑</button>
+                <form method="post" style="display:inline" onsubmit="return confirm('确认删除？')">
+                  <?= csrf_field() ?>
+                  <input type="hidden" name="_action" value="delete_bubble">
+                  <input type="hidden" name="id" value="<?= (int)$b['id'] ?>">
+                  <button class="btn btn-sm btn-danger" type="submit">删除</button>
+                </form>
+              </td>
+            </tr>
+          <?php endforeach; endif; ?>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- 新增气泡 -->
+    <div class="af-panel" data-panel="create">
+      <form method="post" class="af-form">
+        <?= csrf_field() ?>
+        <input type="hidden" name="_action" value="save_bubble">
+        <div class="af-grid">
+          <label>编码 <input name="code" required placeholder="如 sakura"></label>
+          <label>名称 <input name="name" required placeholder="如 樱花物语"></label>
+          <label>特效类型
+            <select name="effect_type" required onchange="onEffectChange(this,'create')">
+              <option value="">-- 选择特效 --</option>
+              <?php foreach ($effectTypes as $k => $v): ?>
+                <option value="<?= htmlspecialchars($k) ?>"><?= htmlspecialchars($v['name']) ?> — <?= htmlspecialchars($v['desc']) ?></option>
+              <?php endforeach; ?>
+            </select>
+          </label>
+          <label>特效参数 (JSON) <input name="effect_params" id="create_effect_params" placeholder='{"color":"#f9a8d4","count":12,"speed":0.6}'></label>
+          <label>品质
+            <select name="quality" onchange="onQualityChange(this)">
+              <?php foreach ($qualities as $q): ?>
+                <option value="<?= htmlspecialchars($q['code']) ?>" data-name="<?= htmlspecialchars($q['name']) ?>" data-color="<?= htmlspecialchars($q['color']) ?>"><?= htmlspecialchars($q['name']) ?></option>
+              <?php endforeach; ?>
+            </select>
+          </label>
+          <input type="hidden" name="quality_name" value="标准">
+          <input type="hidden" name="quality_color" value="#64748b">
+          <label>授予方式
+            <select name="grant_type"><option value="manual">手动</option><option value="rule">规则</option></select>
+          </label>
+          <label>规则类型 <input name="rule_type" value="manual"></label>
+          <label>规则值 <input name="rule_value" type="number" value="0"></label>
+          <label>排序 <input name="sort_order" type="number" value="0"></label>
+          <label>状态
+            <select name="status"><option value="active">启用</option><option value="inactive">停用</option></select>
+          </label>
+        </div>
+        <label>描述 <textarea name="description" rows="2" placeholder="气泡特效描述"></textarea></label>
+        <div class="af-preview-area" id="createPreview" style="margin:16px 0">
+          <div style="font-size:13px;color:var(--text-soft,#64748b);margin-bottom:8px">特效预览</div>
+          <div id="createPreviewBox" style="width:100%;height:120px;border-radius:16px;border:1px solid var(--line-soft,#e2e8f0);overflow:hidden;position:relative;background:linear-gradient(135deg,#1e293b 0%,#0f172a 100%)"></div>
+        </div>
+        <button class="btn btn-primary" type="submit">创建气泡</button>
+      </form>
+    </div>
+
+    <!-- 品质配置 -->
+    <div class="af-panel" data-panel="quality">
+      <form method="post" class="af-form" style="margin-bottom:20px">
+        <?= csrf_field() ?>
+        <input type="hidden" name="_action" value="save_quality">
+        <div class="af-grid">
+          <label>品质标识 <input name="code" required placeholder="如 legend"></label>
+          <label>品质名称 <input name="name" required placeholder="如 传奇"></label>
+          <label>颜色 <input name="color" type="color" value="#64748b"></label>
+          <label>排序 <input name="sort_order" type="number" value="0"></label>
+          <label>状态 <select name="status"><option value="active">启用</option><option value="inactive">停用</option></select></label>
+        </div>
+        <button class="btn btn-primary" type="submit">添加品质</button>
+      </form>
+      <div class="table-responsive">
+        <table class="table">
+          <thead><tr><th>标识</th><th>名称</th><th>颜色</th><th>排序</th><th>气泡数</th><th>状态</th><th>操作</th></tr></thead>
+          <tbody>
+          <?php foreach ($qualities as $q): ?>
+            <tr>
+              <td><code><?= htmlspecialchars($q['code']) ?></code></td>
+              <td><?= htmlspecialchars($q['name']) ?></td>
+              <td><span style="display:inline-block;width:20px;height:20px;border-radius:4px;background:<?= htmlspecialchars($q['color']) ?>;vertical-align:middle"></span> <?= htmlspecialchars($q['color']) ?></td>
+              <td><?= (int)$q['sort_order'] ?></td>
+              <td><?= (int)($q['bubble_count'] ?? 0) ?></td>
+              <td><span class="status-<?= $q['status']==='active'?'approved':'rejected' ?>"><?= $q['status']==='active'?'启用':'停用' ?></span></td>
+              <td>
+                <button class="btn btn-sm" onclick="editQuality('<?= htmlspecialchars($q['code']) ?>')">编辑</button>
+                <form method="post" style="display:inline" onsubmit="return confirm('确认删除？')">
+                  <?= csrf_field() ?>
+                  <input type="hidden" name="_action" value="delete_quality">
+                  <input type="hidden" name="code" value="<?= htmlspecialchars($q['code']) ?>">
+                  <button class="btn btn-sm btn-danger" type="submit">删除</button>
+                </form>
+              </td>
+            </tr>
+          <?php endforeach; ?>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- 授予用户 -->
+    <div class="af-panel" data-panel="grant">
+      <form method="post" class="af-form">
+        <?= csrf_field() ?>
+        <input type="hidden" name="_action" value="grant_bubble">
+        <div class="af-grid">
+          <label>用户
+            <div class="af-search-select" id="grantUserSelect">
+              <input type="hidden" name="user_id" id="grantUserId">
+              <input class="af-search-input" placeholder="搜索用户名/昵称..." id="grantUserSearch">
+              <div class="af-search-dropdown" id="grantUserDropdown"></div>
+            </div>
+          </label>
+          <label>气泡
+            <div class="af-search-select" id="grantBubbleSelect">
+              <input type="hidden" name="bubble_id" id="grantBubbleId">
+              <input class="af-search-input" placeholder="搜索气泡..." id="grantBubbleSearch">
+              <div class="af-search-dropdown" id="grantBubbleDropdown"></div>
+            </div>
+          </label>
+        </div>
+        <label>备注 <input name="note" placeholder="授予原因"></label>
+        <button class="btn btn-primary" type="submit">授予</button>
+      </form>
+    </div>
+
+    <!-- 授予记录 -->
+    <div class="af-panel" data-panel="history">
+      <div class="table-responsive">
+        <table class="table">
+          <thead><tr><th>ID</th><th>用户</th><th>气泡</th><th>备注</th><th>来源</th><th>时间</th><th>操作</th></tr></thead>
+          <tbody>
+          <?php if (empty($grants)): ?>
+            <tr><td colspan="7" class="text-center text-muted">暂无记录</td></tr>
+          <?php else: foreach ($grants as $g): ?>
+            <tr>
+              <td><?= (int)$g['id'] ?></td>
+              <td><?= htmlspecialchars($g['nickname'] ?: $g['username']) ?> <small class="text-muted">#<?= htmlspecialchars($g['public_id'] ?? '') ?></small></td>
+              <td><?= htmlspecialchars($g['bubble_name']) ?></td>
+              <td><?= htmlspecialchars($g['note'] ?? '') ?></td>
+              <td><?= htmlspecialchars($g['grant_source']) ?></td>
+              <td><?= htmlspecialchars($g['granted_at']) ?></td>
+              <td>
+                <form method="post" style="display:inline" onsubmit="return confirm('确认收回？')">
+                  <?= csrf_field() ?>
+                  <input type="hidden" name="_action" value="revoke_bubble">
+                  <input type="hidden" name="id" value="<?= (int)$g['id'] ?>">
+                  <button class="btn btn-sm btn-danger" type="submit">收回</button>
+                </form>
+              </td>
+            </tr>
+          <?php endforeach; endif; ?>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 编辑弹窗 -->
+<div class="af-edit-modal" id="bubbleEditModal" hidden>
+  <div class="af-edit-mask" onclick="closeEditModal()"></div>
+  <div class="af-edit-card">
+    <div class="af-edit-head"><strong id="editModalTitle">编辑</strong><button onclick="closeEditModal()">×</button></div>
+    <div class="af-edit-body">
+      <!-- 气泡编辑 -->
+      <form method="post" id="bubbleEditForm" class="af-form">
+        <?= csrf_field() ?>
+        <input type="hidden" name="_action" value="save_bubble">
+        <input type="hidden" name="id" id="edit_bubble_id">
+        <div class="af-grid">
+          <label>编码 <input name="code" id="edit_bubble_code" required></label>
+          <label>名称 <input name="name" id="edit_bubble_name" required></label>
+          <label>特效类型
+            <select name="effect_type" id="edit_bubble_effect_type" required onchange="onEffectChange(this,'edit')">
+              <option value="">-- 选择特效 --</option>
+              <?php foreach ($effectTypes as $k => $v): ?>
+                <option value="<?= htmlspecialchars($k) ?>"><?= htmlspecialchars($v['name']) ?></option>
+              <?php endforeach; ?>
+            </select>
+          </label>
+          <label>特效参数 (JSON) <input name="effect_params" id="edit_bubble_effect_params"></label>
+          <label>品质
+            <select name="quality" id="edit_bubble_quality" onchange="onQualityChange(this)">
+              <?php foreach ($qualities as $q): ?>
+                <option value="<?= htmlspecialchars($q['code']) ?>" data-name="<?= htmlspecialchars($q['name']) ?>" data-color="<?= htmlspecialchars($q['color']) ?>"><?= htmlspecialchars($q['name']) ?></option>
+              <?php endforeach; ?>
+            </select>
+          </label>
+          <input type="hidden" name="quality_name" id="edit_bubble_quality_name">
+          <input type="hidden" name="quality_color" id="edit_bubble_quality_color">
+          <label>授予方式 <select name="grant_type" id="edit_bubble_grant_type"><option value="manual">手动</option><option value="rule">规则</option></select></label>
+          <label>规则类型 <input name="rule_type" id="edit_bubble_rule_type"></label>
+          <label>规则值 <input name="rule_value" id="edit_bubble_rule_value" type="number"></label>
+          <label>排序 <input name="sort_order" id="edit_bubble_sort_order" type="number"></label>
+          <label>状态 <select name="status" id="edit_bubble_status"><option value="active">启用</option><option value="inactive">停用</option></select></label>
+        </div>
+        <label>描述 <textarea name="description" id="edit_bubble_description" rows="2"></textarea></label>
+        <div style="margin:16px 0">
+          <div style="font-size:13px;color:var(--text-soft,#64748b);margin-bottom:8px">特效预览</div>
+          <div id="editPreviewBox" style="width:100%;height:120px;border-radius:16px;border:1px solid var(--line-soft,#e2e8f0);overflow:hidden;position:relative;background:linear-gradient(135deg,#1e293b 0%,#0f172a 100%)"></div>
+        </div>
+        <button class="btn btn-primary" type="submit">保存</button>
+      </form>
+      <!-- 品质编辑 -->
+      <form method="post" id="qualityEditForm" class="af-form" hidden>
+        <?= csrf_field() ?>
+        <input type="hidden" name="_action" value="save_quality">
+        <input type="hidden" name="code" id="edit_quality_code">
+        <div class="af-grid">
+          <label>品质名称 <input name="name" id="edit_quality_name" required></label>
+          <label>颜色 <input name="color" id="edit_quality_color" type="color"></label>
+          <label>排序 <input name="sort_order" id="edit_quality_sort" type="number"></label>
+          <label>状态 <select name="status" id="edit_quality_status"><option value="active">启用</option><option value="inactive">停用</option></select></label>
+        </div>
+        <button class="btn btn-primary" type="submit">保存</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+var ClayBubbleRows=<?= $bubbleRows ?>;
+var ClayBubbleQualities=<?= $qualityRows ?>;
+var ClayBubbleUsers=<?= $userRows ?>;
+var ClayEffectTypes=<?= $effectTypesJson ?>;
+</script>
+<script src="/assets/js/bubble-effects.js"></script>
+<script>
+(function(){
+  /* Tab switching */
+  var card=document.getElementById('bubbleTabsCard');
+  if(!card)return;
+  var tabs=card.querySelectorAll('.af-tab'),panels=card.querySelectorAll('.af-panel');
+  var saved=localStorage.getItem('bubbleAdminTab')||'list';
+  function switchTab(name){
+    tabs.forEach(function(t){t.classList.toggle('active',t.dataset.tab===name)});
+    panels.forEach(function(p){p.classList.toggle('active',p.dataset.panel===name)});
+    localStorage.setItem('bubbleAdminTab',name);
+  }
+  tabs.forEach(function(t){t.addEventListener('click',function(){switchTab(t.dataset.tab)})});
+  switchTab(saved);
+
+  /* Init mini previews */
+  document.querySelectorAll('.bubble-preview-mini[data-effect]').forEach(function(el){
+    var et=el.dataset.effect,ep=el.dataset.params;
+    if(et&&window.BubbleEffects){
+      try{BubbleEffects.render(el,et,JSON.parse(ep||'{}'))}catch(e){}
+    }
+  });
+
+  /* Quality select auto-fill */
+  window.onQualityChange=function(sel){
+    var opt=sel.options[sel.selectedIndex];
+    var form=sel.closest('form');
+    var nameInput=form.querySelector('input[name="quality_name"]');
+    var colorInput=form.querySelector('input[name="quality_color"]');
+    if(nameInput)nameInput.value=opt.dataset.name||'';
+    if(colorInput)colorInput.value=opt.dataset.color||'#64748b';
+  };
+
+  /* Effect change handler */
+  window.onEffectChange=function(sel,prefix){
+    var et=sel.value;
+    var type=ClayEffectTypes[et];
+    var paramsInput=document.getElementById(prefix+'_effect_params');
+    if(type&&paramsInput){
+      var defaults={color:type.default_color,count:12,speed:0.6};
+      paramsInput.value=JSON.stringify(defaults);
+    }
+    updatePreview(prefix);
+  };
+
+  /* Live preview */
+  function updatePreview(prefix){
+    var boxId=prefix==='create'?'createPreviewBox':'editPreviewBox';
+    var box=document.getElementById(boxId);
+    if(!box)return;
+    box.innerHTML='';
+    var sel=document.getElementById(prefix+'_effect_params');
+    var typeSel=document.querySelector('[name="effect_type"]');
+    if(!typeSel)return;
+    var et=typeSel.value;
+    if(!et||!window.BubbleEffects)return;
+    try{
+      var params=JSON.parse(sel.value||'{}');
+      BubbleEffects.render(box,et,params);
+    }catch(e){}
+  }
+
+  /* Params input change triggers preview */
+  var cp=document.getElementById('create_effect_params');
+  if(cp)cp.addEventListener('input',function(){updatePreview('create')});
+  var ep=document.getElementById('edit_bubble_effect_params');
+  if(ep)ep.addEventListener('input',function(){updatePreview('edit')});
+
+  /* Edit bubble */
+  window.editBubble=function(id){
+    var row=ClayBubbleRows.find(function(r){return parseInt(r.id)===id});
+    if(!row)return;
+    document.getElementById('editModalTitle').textContent='编辑气泡: '+row.name;
+    document.getElementById('bubbleEditForm').hidden=false;
+    document.getElementById('qualityEditForm').hidden=true;
+    document.getElementById('edit_bubble_id').value=row.id;
+    document.getElementById('edit_bubble_code').value=row.code;
+    document.getElementById('edit_bubble_name').value=row.name;
+    document.getElementById('edit_bubble_effect_type').value=row.effect_type||'';
+    document.getElementById('edit_bubble_effect_params').value=row.effect_params||'';
+    document.getElementById('edit_bubble_quality').value=row.quality;
+    document.getElementById('edit_bubble_quality_name').value=row.quality_name;
+    document.getElementById('edit_bubble_quality_color').value=row.quality_color;
+    document.getElementById('edit_bubble_grant_type').value=row.grant_type;
+    document.getElementById('edit_bubble_rule_type').value=row.rule_type;
+    document.getElementById('edit_bubble_rule_value').value=row.rule_value;
+    document.getElementById('edit_bubble_sort_order').value=row.sort_order;
+    document.getElementById('edit_bubble_status').value=row.status;
+    document.getElementById('edit_bubble_description').value=row.description||'';
+    document.getElementById('bubbleEditModal').hidden=false;
+    setTimeout(function(){updatePreview('edit')},100);
+  };
+
+  /* Edit quality */
+  window.editQuality=function(code){
+    var row=ClayBubbleQualities.find(function(r){return r.code===code});
+    if(!row)return;
+    document.getElementById('editModalTitle').textContent='编辑品质: '+row.name;
+    document.getElementById('bubbleEditForm').hidden=true;
+    document.getElementById('qualityEditForm').hidden=false;
+    document.getElementById('edit_quality_code').value=row.code;
+    document.getElementById('edit_quality_name').value=row.name;
+    document.getElementById('edit_quality_color').value=row.color;
+    document.getElementById('edit_quality_sort').value=row.sort_order;
+    document.getElementById('edit_quality_status').value=row.status;
+    document.getElementById('bubbleEditModal').hidden=false;
+  };
+
+  window.closeEditModal=function(){document.getElementById('bubbleEditModal').hidden=true};
+
+  /* Search-select for grant */
+  function setupSearchSelect(inputId,dropdownId,hiddenId,items,labelFn){
+    var input=document.getElementById(inputId);
+    var dd=document.getElementById(dropdownId);
+    var hidden=document.getElementById(hiddenId);
+    if(!input||!dd||!hidden)return;
+    function render(items){
+      dd.innerHTML='';
+      items.forEach(function(item){
+        var div=document.createElement('div');
+        div.className='af-search-option';
+        div.textContent=labelFn(item);
+        div.addEventListener('click',function(){
+          input.value=labelFn(item);
+          hidden.value=item.id;
+          dd.hidden=true;
+        });
+        dd.appendChild(div);
+      });
+      dd.hidden=items.length===0;
+    }
+    input.addEventListener('focus',function(){render(items)});
+    input.addEventListener('input',function(){
+      var q=input.value.toLowerCase();
+      render(items.filter(function(i){return labelFn(i).toLowerCase().indexOf(q)>=0}));
+    });
+    document.addEventListener('click',function(e){
+      if(!input.contains(e.target)&&!dd.contains(e.target))dd.hidden=true;
+    });
+  }
+  setupSearchSelect('grantUserSearch','grantUserDropdown','grantUserId',ClayBubbleUsers,function(u){return(u.nickname||u.username)+' #'+u.public_id});
+  setupSearchSelect('grantBubbleSearch','grantBubbleDropdown','grantBubbleId',ClayBubbleRows,function(b){return b.name+' ('+b.code+')'});
+
+  /* Create form: init quality defaults */
+  var createQualitySel=document.querySelector('.af-panel[data-panel="create"] select[name="quality"]');
+  if(createQualitySel&&createQualitySel.options.length>0){
+    var firstOpt=createQualitySel.options[0];
+    var nf=createQualitySel.closest('form');
+    var ni=nf.querySelector('input[name="quality_name"]');
+    var ci=nf.querySelector('input[name="quality_color"]');
+    if(ni)ni.value=firstOpt.dataset.name||'';
+    if(ci)ci.value=firstOpt.dataset.color||'#64748b';
+  }
+})();
+</script>
+
+<style>
+.af-tabs-card{background:var(--card-bg,#fff);border-radius:12px;overflow:hidden}
+.af-tabs{display:flex;border-bottom:1px solid var(--line-soft,#e2e8f0);overflow-x:auto}
+.af-tab{padding:10px 18px;font-size:13px;font-weight:600;border:none;background:none;cursor:pointer;color:var(--text-soft,#64748b);white-space:nowrap;border-bottom:2px solid transparent}
+.af-tab.active{color:#0284c7;border-bottom-color:#0284c7}
+.af-panel{display:none;padding:20px}.af-panel.active{display:block}
+.af-form label{display:block;margin-bottom:12px;font-size:13px;font-weight:600;color:var(--text-main,#334155)}
+.af-form input,.af-form select,.af-form textarea{width:100%;margin-top:4px;padding:8px 10px;border:1px solid var(--line-soft,#e2e8f0);border-radius:8px;font-size:13px;background:var(--card-bg,#fff);color:var(--text-main,#0f172a)}
+.af-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
+.af-search-select{position:relative}
+.af-search-dropdown{position:absolute;top:100%;left:0;right:0;background:var(--card-bg,#fff);border:1px solid var(--line-soft,#e2e8f0);border-radius:8px;max-height:200px;overflow-y:auto;z-index:10;box-shadow:0 4px 12px rgba(0,0,0,.1)}
+.af-search-option{padding:8px 12px;cursor:pointer;font-size:13px}
+.af-search-option:hover{background:var(--bg-hover,#f1f5f9)}
+.af-edit-modal{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center}
+.af-edit-modal[hidden]{display:none!important}
+.af-edit-mask{position:absolute;inset:0;background:rgba(0,0,0,.4)}
+.af-edit-card{position:relative;background:var(--card-bg,#fff);border-radius:16px;width:min(680px,95vw);max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.2)}
+.af-edit-head{display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid var(--line-soft,#e2e8f0)}
+.af-edit-head button{background:none;border:none;font-size:20px;cursor:pointer}
+.af-edit-body{padding:20px}
+.text-muted{color:var(--text-soft,#94a3b8)}
+</style>
+
+<?php require dirname(__DIR__) . '/layouts/main_footer.php'; ?>

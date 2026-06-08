@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <defs>
+    <radialGradient id="ldf-glow" cx="50%" cy="50%" r="50%">
+      <stop offset="62%" stop-color="#7c1d0a" stop-opacity="0"/>
+      <stop offset="82%" stop-color="#f59e0b" stop-opacity=".55"/>
+      <stop offset="100%" stop-color="#dc2626" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="ldf-ring" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fde68a"/>
+      <stop offset="35%" stop-color="#f59e0b"/>
+      <stop offset="65%" stop-color="#ef4444"/>
+      <stop offset="100%" stop-color="#b91c1c"/>
+    </linearGradient>
+    <linearGradient id="ldf-crown" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#fffbe6"/>
+      <stop offset="45%" stop-color="#fde047"/>
+      <stop offset="100%" stop-color="#f59e0b"/>
+    </linearGradient>
+    <filter id="ldf-blur" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="2.4"/>
+    </filter>
+  </defs>
+
+  <!-- 外层呼吸光晕 -->
+  <circle cx="100" cy="100" r="96" fill="url(#ldf-glow)">
+    <animate attributeName="opacity" values="0.55;1;0.55" dur="2.6s" repeatCount="indefinite"/>
+  </circle>
+
+  <!-- 旋转的烈焰光环 -->
+  <g style="transform-origin:100px 100px">
+    <animateTransform attributeName="transform" type="rotate" from="0 100 100" to="360 100 100" dur="14s" repeatCount="indefinite"/>
+    <circle cx="100" cy="100" r="84" fill="none" stroke="url(#ldf-ring)" stroke-width="6" stroke-dasharray="34 14" stroke-linecap="round" filter="url(#ldf-blur)" opacity=".9"/>
+    <circle cx="100" cy="100" r="84" fill="none" stroke="url(#ldf-ring)" stroke-width="3.5" stroke-dasharray="34 14" stroke-linecap="round"/>
+  </g>
+
+  <!-- 反向细环 -->
+  <g style="transform-origin:100px 100px">
+    <animateTransform attributeName="transform" type="rotate" from="360 100 100" to="0 100 100" dur="9s" repeatCount="indefinite"/>
+    <circle cx="100" cy="100" r="92" fill="none" stroke="#fcd34d" stroke-width="1.4" stroke-dasharray="2 9" stroke-linecap="round" opacity=".8"/>
+  </g>
+
+  <!-- 顶部火焰王冠 -->
+  <g>
+    <animateTransform attributeName="transform" type="scale" additive="sum" values="1 1;1.06 0.96;1 1" dur="1.3s" repeatCount="indefinite" style="transform-origin:100px 26px"/>
+    <path d="M70 40 L78 14 L90 34 L100 8 L110 34 L122 14 L130 40 Z" fill="url(#ldf-crown)" stroke="#b45309" stroke-width="1.5" stroke-linejoin="round"/>
+    <circle cx="100" cy="8" r="3.6" fill="#fff7ed"/>
+    <circle cx="78" cy="14" r="2.6" fill="#fde68a"/>
+    <circle cx="122" cy="14" r="2.6" fill="#fde68a"/>
+  </g>
+
+  <!-- 环绕火星粒子 -->
+  <g fill="#fbbf24">
+    <circle cx="100" cy="14" r="2.4">
+      <animateTransform attributeName="transform" type="rotate" from="0 100 100" to="360 100 100" dur="6s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0;1;0" dur="2s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="186" cy="100" r="2" fill="#f87171">
+      <animateTransform attributeName="transform" type="rotate" from="120 100 100" to="480 100 100" dur="6s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0;1;0" dur="2s" begin="0.6s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="14" cy="100" r="2" fill="#fcd34d">
+      <animateTransform attributeName="transform" type="rotate" from="240 100 100" to="600 100 100" dur="6s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0;1;0" dur="2s" begin="1.2s" repeatCount="indefinite"/>
+    </circle>
+  </g>
+</svg>

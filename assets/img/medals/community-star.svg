@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120">
+  <defs>
+    <linearGradient id="md-str-g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#e9d5ff"/>
+      <stop offset="50%" stop-color="#a855f7"/>
+      <stop offset="100%" stop-color="#6d28d9"/>
+    </linearGradient>
+    <radialGradient id="md-str-glow" cx="50%" cy="50%" r="55%">
+      <stop offset="50%" stop-color="#7c3aed" stop-opacity="0"/>
+      <stop offset="100%" stop-color="#c084fc" stop-opacity=".5"/>
+    </radialGradient>
+  </defs>
+  <circle cx="60" cy="60" r="50" fill="url(#md-str-glow)">
+    <animate attributeName="opacity" values="0.5;1;0.5" dur="2.6s" repeatCount="indefinite"/>
+  </circle>
+  <!-- 外环虚线旋转 -->
+  <g style="transform-origin:60px 60px">
+    <animateTransform attributeName="transform" type="rotate" from="0 60 60" to="360 60 60" dur="9s" repeatCount="indefinite"/>
+    <circle cx="60" cy="60" r="46" fill="none" stroke="#c4b5fd" stroke-width="2" stroke-dasharray="3 8" stroke-linecap="round" opacity=".8"/>
+  </g>
+  <!-- 主星 脉动 -->
+  <g style="transform-origin:60px 60px">
+    <animateTransform attributeName="transform" type="scale" additive="sum" values="1 1;1.08 1.08;1 1" dur="1.8s" repeatCount="indefinite" style="transform-origin:60px 60px"/>
+    <path d="M60 24 L70 50 L98 52 L76 70 L84 98 L60 82 L36 98 L44 70 L22 52 L50 50 Z" fill="url(#md-str-g)" stroke="#f5f3ff" stroke-width="2" stroke-linejoin="round"/>
+  </g>
+  <!-- 中心高光 -->
+  <circle cx="60" cy="60" r="9" fill="#faf5ff" opacity=".9">
+    <animate attributeName="opacity" values="0.6;1;0.6" dur="1.4s" repeatCount="indefinite"/>
+  </circle>
+  <!-- 环绕小星 -->
+  <g fill="#f0abfc">
+    <path d="M60 6 l2 5 l5 1 l-4 3 l1 5 l-4 -3 l-4 3 l1 -5 l-4 -3 l5 -1 Z">
+      <animateTransform attributeName="transform" type="rotate" from="0 60 60" to="360 60 60" dur="7s" repeatCount="indefinite"/>
+    </path>
+  </g>
+</svg>

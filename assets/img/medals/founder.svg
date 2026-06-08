@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120">
+  <defs>
+    <linearGradient id="md-fdr-shield" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#fffbe6"/>
+      <stop offset="40%" stop-color="#fde047"/>
+      <stop offset="100%" stop-color="#d97706"/>
+    </linearGradient>
+    <linearGradient id="md-fdr-crown" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#fff7ed"/>
+      <stop offset="100%" stop-color="#f59e0b"/>
+    </linearGradient>
+    <radialGradient id="md-fdr-glow" cx="50%" cy="45%" r="55%">
+      <stop offset="55%" stop-color="#f59e0b" stop-opacity="0"/>
+      <stop offset="100%" stop-color="#fbbf24" stop-opacity=".5"/>
+    </radialGradient>
+  </defs>
+  <circle cx="60" cy="58" r="50" fill="url(#md-fdr-glow)">
+    <animate attributeName="opacity" values="0.5;1;0.5" dur="2.4s" repeatCount="indefinite"/>
+  </circle>
+  <!-- 旋转光芒 -->
+  <g style="transform-origin:60px 58px" opacity=".55">
+    <animateTransform attributeName="transform" type="rotate" from="0 60 58" to="360 60 58" dur="12s" repeatCount="indefinite"/>
+    <g stroke="#fcd34d" stroke-width="2" stroke-linecap="round">
+      <line x1="60" y1="6" x2="60" y2="16"/><line x1="60" y1="100" x2="60" y2="110"/>
+      <line x1="8" y1="58" x2="18" y2="58"/><line x1="102" y1="58" x2="112" y2="58"/>
+      <line x1="23" y1="21" x2="30" y2="28"/><line x1="90" y1="88" x2="97" y2="95"/>
+      <line x1="97" y1="21" x2="90" y2="28"/><line x1="30" y1="88" x2="23" y2="95"/>
+    </g>
+  </g>
+  <!-- 盾牌 -->
+  <path d="M60 26 L88 36 V64 Q88 86 60 98 Q32 86 32 64 V36 Z" fill="url(#md-fdr-shield)" stroke="#b45309" stroke-width="2.4" stroke-linejoin="round"/>
+  <!-- 皇冠 -->
+  <g>
+    <animateTransform attributeName="transform" type="scale" additive="sum" values="1 1;1.05 0.95;1 1" dur="1.6s" repeatCount="indefinite" style="transform-origin:60px 52px"/>
+    <path d="M44 60 L48 42 L56 54 L60 38 L64 54 L72 42 L76 60 Z" fill="url(#md-fdr-crown)" stroke="#b45309" stroke-width="1.6" stroke-linejoin="round"/>
+    <circle cx="60" cy="38" r="2.6" fill="#fff7ed"/>
+  </g>
+  <!-- 闪光 -->
+  <circle cx="74" cy="40" r="2.4" fill="#fffbe6"><animate attributeName="opacity" values="0;1;0" dur="1.8s" repeatCount="indefinite"/></circle>
+  <circle cx="46" cy="74" r="2" fill="#fffbe6"><animate attributeName="opacity" values="1;0;1" dur="2.2s" repeatCount="indefinite"/></circle>
+</svg>

@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <linearGradient id="paw-g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#fff7ed"/>
+      <stop offset="45%" stop-color="#fdba74"/>
+      <stop offset="100%" stop-color="#fb7185"/>
+    </linearGradient>
+    <filter id="paw-shadow" x="-30%" y="-30%" width="160%" height="160%"><feDropShadow dx="0" dy="3" stdDeviation="3" flood-color="#fb923c" flood-opacity=".36"/></filter>
+  </defs>
+  <g fill="url(#paw-g)" stroke="#fff7ed" stroke-width="3" filter="url(#paw-shadow)">
+    <ellipse cx="20" cy="19" rx="8" ry="10" transform="rotate(-18 20 19)"/>
+    <ellipse cx="32" cy="14" rx="8" ry="10"/>
+    <ellipse cx="44" cy="19" rx="8" ry="10" transform="rotate(18 44 19)"/>
+    <path d="M18 42c0-10 7-17 14-17s14 7 14 17c0 8-6 13-14 13s-14-5-14-13Z"/>
+  </g>
+</svg>

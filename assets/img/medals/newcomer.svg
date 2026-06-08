@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120">
+  <defs>
+    <linearGradient id="md-new-g" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#bbf7d0"/>
+      <stop offset="60%" stop-color="#4ade80"/>
+      <stop offset="100%" stop-color="#16a34a"/>
+    </linearGradient>
+    <radialGradient id="md-new-glow" cx="50%" cy="55%" r="55%">
+      <stop offset="55%" stop-color="#22c55e" stop-opacity="0"/>
+      <stop offset="100%" stop-color="#86efac" stop-opacity=".4"/>
+    </radialGradient>
+  </defs>
+  <circle cx="60" cy="60" r="50" fill="url(#md-new-glow)">
+    <animate attributeName="opacity" values="0.45;0.8;0.45" dur="3.2s" repeatCount="indefinite"/>
+  </circle>
+  <!-- 土堆 -->
+  <path d="M30 86 Q60 74 90 86 L90 92 Q60 86 30 92 Z" fill="#92400e" opacity=".85"/>
+  <!-- 茎 摇摆 -->
+  <g style="transform-origin:60px 84px">
+    <animateTransform attributeName="transform" type="rotate" values="-4 60 84;4 60 84;-4 60 84" dur="2.8s" repeatCount="indefinite"/>
+    <path d="M60 84 L60 50" stroke="#16a34a" stroke-width="4" stroke-linecap="round"/>
+    <!-- 左叶 -->
+    <path d="M60 60 Q42 52 38 64 Q52 70 60 60 Z" fill="url(#md-new-g)" stroke="#15803d" stroke-width="1.4"/>
+    <!-- 右叶 -->
+    <path d="M60 54 Q78 46 82 58 Q68 64 60 54 Z" fill="url(#md-new-g)" stroke="#15803d" stroke-width="1.4"/>
+    <!-- 顶芽 -->
+    <circle cx="60" cy="48" r="6" fill="#86efac" stroke="#15803d" stroke-width="1.4"/>
+  </g>
+  <!-- 闪光露珠 -->
+  <g fill="#dcfce7">
+    <circle cx="40" cy="46" r="2"><animate attributeName="opacity" values="0.3;1;0.3" dur="2s" repeatCount="indefinite"/></circle>
+    <circle cx="82" cy="40" r="1.8"><animate attributeName="opacity" values="1;0.3;1" dur="2.4s" repeatCount="indefinite"/></circle>
+  </g>
+</svg>

@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120">
+  <defs>
+    <linearGradient id="md-pop-g" x1="0" y1="1" x2="0" y2="0">
+      <stop offset="0%" stop-color="#fca5a5"/>
+      <stop offset="45%" stop-color="#f97316"/>
+      <stop offset="100%" stop-color="#fde047"/>
+    </linearGradient>
+    <radialGradient id="md-pop-glow" cx="50%" cy="55%" r="55%">
+      <stop offset="50%" stop-color="#f97316" stop-opacity="0"/>
+      <stop offset="100%" stop-color="#fb923c" stop-opacity=".5"/>
+    </radialGradient>
+  </defs>
+  <circle cx="60" cy="60" r="50" fill="url(#md-pop-glow)">
+    <animate attributeName="opacity" values="0.55;1;0.55" dur="1.8s" repeatCount="indefinite"/>
+  </circle>
+  <!-- 火焰主体 -->
+  <g style="transform-origin:60px 70px">
+    <animateTransform attributeName="transform" type="scale" additive="sum" values="1 1;1.04 1.08;0.98 0.96;1 1" dur="1.1s" repeatCount="indefinite"/>
+    <path d="M60 22 C72 40 84 48 84 68 a24 24 0 0 1 -48 0 C36 52 48 50 52 38 C56 48 56 52 60 50 C64 46 62 34 60 22 Z" fill="url(#md-pop-g)" stroke="#fff7ed" stroke-width="1.5" stroke-linejoin="round"/>
+  </g>
+  <!-- 内焰 -->
+  <path d="M60 52 C66 60 70 64 70 74 a10 10 0 0 1 -20 0 C50 66 56 64 60 52 Z" fill="#fef9c3" opacity=".9">
+    <animate attributeName="opacity" values="0.7;1;0.7" dur="0.9s" repeatCount="indefinite"/>
+  </path>
+  <!-- 上升火星 -->
+  <g fill="#fbbf24">
+    <circle cx="50" cy="34" r="2"><animate attributeName="cy" values="40;20;40" dur="1.6s" repeatCount="indefinite"/><animate attributeName="opacity" values="1;0;1" dur="1.6s" repeatCount="indefinite"/></circle>
+    <circle cx="72" cy="38" r="1.8"><animate attributeName="cy" values="44;24;44" dur="2s" repeatCount="indefinite"/><animate attributeName="opacity" values="1;0;1" dur="2s" repeatCount="indefinite"/></circle>
+    <circle cx="60" cy="30" r="1.6"><animate attributeName="cy" values="34;14;34" dur="1.8s" repeatCount="indefinite"/><animate attributeName="opacity" values="1;0;1" dur="1.8s" repeatCount="indefinite"/></circle>
+  </g>
+</svg>

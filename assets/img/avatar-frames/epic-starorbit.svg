@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <defs>
+    <radialGradient id="eso-glow" cx="50%" cy="50%" r="50%">
+      <stop offset="60%" stop-color="#3b0764" stop-opacity="0"/>
+      <stop offset="84%" stop-color="#a855f7" stop-opacity=".5"/>
+      <stop offset="100%" stop-color="#6366f1" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="eso-ring" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#c4b5fd"/>
+      <stop offset="50%" stop-color="#a855f7"/>
+      <stop offset="100%" stop-color="#6366f1"/>
+    </linearGradient>
+    <filter id="eso-blur" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="2"/>
+    </filter>
+  </defs>
+
+  <circle cx="100" cy="100" r="95" fill="url(#eso-glow)">
+    <animate attributeName="opacity" values="0.6;1;0.6" dur="3s" repeatCount="indefinite"/>
+  </circle>
+
+  <!-- 倾斜星轨 1 -->
+  <g style="transform-origin:100px 100px">
+    <animateTransform attributeName="transform" type="rotate" from="0 100 100" to="360 100 100" dur="11s" repeatCount="indefinite"/>
+    <ellipse cx="100" cy="100" rx="88" ry="40" fill="none" stroke="url(#eso-ring)" stroke-width="3" filter="url(#eso-blur)" opacity=".85" transform="rotate(28 100 100)"/>
+    <ellipse cx="100" cy="100" rx="88" ry="40" fill="none" stroke="#e9d5ff" stroke-width="1.4" transform="rotate(28 100 100)"/>
+    <circle cx="12" cy="100" r="4" fill="#f0abfc" transform="rotate(28 100 100)">
+      <animate attributeName="r" values="3;5;3" dur="1.6s" repeatCount="indefinite"/>
+    </circle>
+  </g>
+
+  <!-- 倾斜星轨 2 反向 -->
+  <g style="transform-origin:100px 100px">
+    <animateTransform attributeName="transform" type="rotate" from="360 100 100" to="0 100 100" dur="8s" repeatCount="indefinite"/>
+    <ellipse cx="100" cy="100" rx="88" ry="40" fill="none" stroke="url(#eso-ring)" stroke-width="2.4" opacity=".8" transform="rotate(-32 100 100)"/>
+    <circle cx="188" cy="100" r="3.4" fill="#a5b4fc" transform="rotate(-32 100 100)">
+      <animate attributeName="r" values="2.4;4.4;2.4" dur="1.8s" repeatCount="indefinite"/>
+    </circle>
+  </g>
+
+  <!-- 外环虚线 -->
+  <g style="transform-origin:100px 100px">
+    <animateTransform attributeName="transform" type="rotate" from="0 100 100" to="360 100 100" dur="20s" repeatCount="indefinite"/>
+    <circle cx="100" cy="100" r="93" fill="none" stroke="#c4b5fd" stroke-width="1.2" stroke-dasharray="1.5 10" stroke-linecap="round" opacity=".7"/>
+  </g>
+
+  <!-- 静态闪烁星点 -->
+  <g fill="#fff">
+    <circle cx="100" cy="9" r="2.2"><animate attributeName="opacity" values="0.3;1;0.3" dur="1.5s" repeatCount="indefinite"/></circle>
+    <circle cx="160" cy="40" r="1.8"><animate attributeName="opacity" values="1;0.3;1" dur="2s" repeatCount="indefinite"/></circle>
+    <circle cx="40" cy="160" r="1.8"><animate attributeName="opacity" values="0.4;1;0.4" dur="1.7s" repeatCount="indefinite"/></circle>
+    <circle cx="170" cy="150" r="1.6"><animate attributeName="opacity" values="1;0.2;1" dur="2.3s" repeatCount="indefinite"/></circle>
+  </g>
+</svg>

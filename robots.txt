@@ -1,0 +1,14 @@
+User-agent: *
+Disallow: /admin.php
+Disallow: /api.php
+Disallow: /config/
+Disallow: /database/
+Disallow: /storage/
+Disallow: /runtime/
+Disallow: /app/
+Disallow: /routes/
+Disallow: /ClayBE/
+Disallow: /uploads/
+Allow: /
+
+Sitemap: https://ovo.claybbs.com/sitemap.xml

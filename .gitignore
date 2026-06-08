@@ -1,0 +1,46 @@
+# Secrets / local env
+.env
+.env.*
+!.env.example
+*.local
+
+# Runtime/user data
+/uploads/
+/storage/
+/logs/
+/runtime/
+/cache/
+/tmp/
+/.well-known/
+/.user.ini
+install.lock
+*.log
+*.sqlite
+*.db
+*.sql.gz
+*.tar
+*.tar.gz
+*.zip
+
+# Dependencies/build output
+node_modules/
+**/node_modules/
+/vendor/
+dist/
+**/dist/
+build/
+**/build/
+coverage/
+.nyc_output/
+
+# ClayGuard distribution artifacts
+CLAYGUARD_DIST.json
+CLAYGUARD_MANIFEST.sig
+/loaders/
+*.clay
+
+# OS/editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

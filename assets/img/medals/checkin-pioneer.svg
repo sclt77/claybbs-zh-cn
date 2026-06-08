@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120">
+  <defs>
+    <linearGradient id="md-chk-g" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#a7f3d0"/>
+      <stop offset="55%" stop-color="#10b981"/>
+      <stop offset="100%" stop-color="#0f766e"/>
+    </linearGradient>
+    <radialGradient id="md-chk-glow" cx="50%" cy="50%" r="55%">
+      <stop offset="55%" stop-color="#10b981" stop-opacity="0"/>
+      <stop offset="100%" stop-color="#34d399" stop-opacity=".45"/>
+    </radialGradient>
+  </defs>
+  <circle cx="60" cy="60" r="50" fill="url(#md-chk-glow)">
+    <animate attributeName="opacity" values="0.5;0.9;0.5" dur="2.8s" repeatCount="indefinite"/>
+  </circle>
+  <!-- 旋转刻度环 -->
+  <g style="transform-origin:60px 60px">
+    <animateTransform attributeName="transform" type="rotate" from="0 60 60" to="360 60 60" dur="16s" repeatCount="indefinite"/>
+    <circle cx="60" cy="60" r="46" fill="none" stroke="#6ee7b7" stroke-width="2" stroke-dasharray="2 8" stroke-linecap="round" opacity=".7"/>
+  </g>
+  <!-- 日历牌 -->
+  <rect x="36" y="36" width="48" height="46" rx="8" fill="url(#md-chk-g)" stroke="#ecfdf5" stroke-width="2.5"/>
+  <rect x="36" y="36" width="48" height="14" rx="8" fill="#0f766e"/>
+  <rect x="46" y="30" width="5" height="12" rx="2.5" fill="#ecfdf5"/>
+  <rect x="69" y="30" width="5" height="12" rx="2.5" fill="#ecfdf5"/>
+  <!-- 对勾 描边动画 -->
+  <path d="M48 64 L57 73 L74 54" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="46" stroke-dashoffset="46">
+    <animate attributeName="stroke-dashoffset" values="46;0;0;46" keyTimes="0;0.4;0.85;1" dur="3s" repeatCount="indefinite"/>
+  </path>
+</svg>

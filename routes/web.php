@@ -1,0 +1,226 @@
+<?php
+
+use App\Controllers\Web\HomeController;
+use App\Controllers\Web\AnnouncementController;
+use App\Controllers\Web\InstallController;
+use App\Controllers\Web\SearchController;
+use App\Controllers\Web\PublishController;
+use App\Controllers\Web\SectionController;
+use App\Controllers\Web\SectionsController;
+use App\Controllers\Web\ThreadController;
+use App\Controllers\Web\UserController;
+use App\Controllers\Web\ReportController;
+use App\Controllers\Web\VerificationController;
+use App\Controllers\Web\GrowthController;
+use App\Controllers\Web\OAuthController;
+use App\Controllers\Web\PaymentController;
+use App\Controllers\Web\CollectionController;
+use App\Controllers\Web\UserCreditController;
+use App\Controllers\Web\MedalController;
+use App\Controllers\Web\AvatarFrameController;
+use App\Controllers\Web\DecorationController;
+use App\Controllers\Web\ForgotPasswordController;
+use App\Controllers\Web\ResetPasswordController;
+use App\Controllers\Web\GroupChatController;
+use App\Controllers\Web\BubbleController;
+use App\Controllers\Web\ChannelController;
+
+$router->get('/install', [InstallController::class, 'index']);
+$router->post('/install', [InstallController::class, 'index']);
+$router->get('/search', [SearchController::class, 'index']);
+$router->get('/announcements', [AnnouncementController::class, 'index']);
+$router->get('/announcement', [AnnouncementController::class, 'show']);
+$router->get('/', [HomeController::class, 'index']);
+$router->get('/sections', [SectionsController::class, 'index']);
+$router->get('/section', [SectionController::class, 'index']);
+$router->post('/section/follow', [SectionController::class, 'toggleFollow']);
+$router->get('/thread', [ThreadController::class, 'show']);
+$router->post('/thread', [ThreadController::class, 'show']);
+$router->get('/thread/edit', [ThreadController::class, 'edit']);
+$router->post('/thread/edit', [ThreadController::class, 'edit']);
+$router->get('/thread/history', [ThreadController::class, 'history']);
+$router->post('/thread/manage', [ThreadController::class, 'manage']);
+$router->post('/post/delete', [ThreadController::class, 'deletePost']);
+$router->post('/thread/favorite', [ThreadController::class, 'toggleFavorite']);
+$router->get('/collections', [CollectionController::class, 'index']);
+$router->post('/thread/later', [CollectionController::class, 'toggleLater']);
+$router->post('/thread/reward', [ThreadController::class, 'reward']);
+$router->post('/thread/accept-answer', [ThreadController::class, 'acceptAnswer']);
+$router->post('/thread/close-bounty', [ThreadController::class, 'closeBounty']);
+$router->get('/thread/rewards', [ThreadController::class, 'rewardList']);
+$router->post('/thread/read-progress', [ThreadController::class, 'readProgress']);
+$router->post('/thread/unlock-paid', [ThreadController::class, 'unlockPaid']);
+$router->post('/content/like', [ThreadController::class, 'toggleLike']);
+$router->post('/content/report', [ThreadController::class, 'report']);
+$router->get('/report', [ReportController::class, 'index']);
+$router->post('/report', [ReportController::class, 'index']);
+$router->post('/user/block', [ThreadController::class, 'blockUser']);
+$router->get('/publish', [PublishController::class, 'index']);
+$router->post('/publish', [PublishController::class, 'index']);
+$router->get('/drafts', [PublishController::class, 'drafts']);
+$router->post('/draft/save', [PublishController::class, 'saveDraft']);
+$router->post('/draft/delete', [PublishController::class, 'deleteDraft']);
+$router->post('/draft/batch-delete', [PublishController::class, 'batchDeleteDrafts']);
+$router->post('/draft/discard-autosave', [PublishController::class, 'discardAutosave']);
+$router->post('/upload/image', [PublishController::class, 'uploadImage']);
+$router->get('/verify-email', [UserController::class, 'verifyEmail']);
+
+$router->get('/login', [UserController::class, 'login']);
+$router->post('/login', [UserController::class, 'login']);
+$router->get('/forgot-password', [ForgotPasswordController::class, 'index']);
+$router->post('/forgot-password', [ForgotPasswordController::class, 'index']);
+$router->get('/reset-password', [ResetPasswordController::class, 'index']);
+$router->post('/reset-password', [ResetPasswordController::class, 'index']);
+$router->get('/oauth/redirect', [OAuthController::class, 'redirect']);
+$router->get('/oauth/callback', [OAuthController::class, 'callback']);
+$router->get('/oauth/complete', [OAuthController::class, 'complete']);
+$router->post('/oauth/complete', [OAuthController::class, 'complete']);
+$router->get('/oauth/bindings', [OAuthController::class, 'bindings']);
+$router->post('/oauth/unbind', [OAuthController::class, 'unbind']);
+$router->get('/register', [UserController::class, 'register']);
+$router->post('/register', [UserController::class, 'register']);
+$router->post('/register/send-code', [UserController::class, 'sendRegisterCode']);
+$router->get('/group-chat/settings', [GroupChatController::class, 'settings']);
+$router->get('/user', [UserController::class, 'profile']);
+$router->post('/user/follow', [UserController::class, 'follow']);
+$router->get('/user/follows', [UserController::class, 'follows']);
+$router->get('/me', [UserController::class, 'center']);
+$router->get('/wallet', [UserController::class, 'wallet']);
+$router->get('/credit', [UserCreditController::class, 'index']);
+$router->get('/wallet/recharge', [PaymentController::class, 'recharge']);
+$router->post('/payment/create', [PaymentController::class, 'create']);
+$router->get('/payment/orders', [PaymentController::class, 'orders']);
+$router->get('/payment/order', [PaymentController::class, 'order']);
+$router->post('/payment/redeem', [PaymentController::class, 'redeem']);
+$router->get('/payment/notify', [PaymentController::class, 'notify']);
+$router->post('/payment/notify', [PaymentController::class, 'notify']);
+$router->get('/payment/return', [PaymentController::class, 'return']);
+$router->get('/tasks', [GrowthController::class, 'index']);
+$router->get('/medals', [MedalController::class, 'index']);
+$router->post('/medals', [MedalController::class, 'index']);
+$router->get('/avatar-frames', [AvatarFrameController::class, 'index']);
+$router->post('/avatar-frames', [AvatarFrameController::class, 'index']);
+$router->get('/decoration', [DecorationController::class, 'index']);
+$router->post('/decoration', [DecorationController::class, 'index']);
+$router->get('/me/avatar-frames', [AvatarFrameController::class, 'index']);
+$router->post('/me/avatar-frames', [AvatarFrameController::class, 'index']);
+$router->get('/bubbles', [BubbleController::class, 'index']);
+$router->post('/bubbles', [BubbleController::class, 'index']);
+$router->get('/me/bubbles', [BubbleController::class, 'index']);
+$router->post('/me/bubbles', [BubbleController::class, 'index']);
+$router->get('/medal', [MedalController::class, 'show']);
+$router->get('/me/medals', [MedalController::class, 'index']);
+$router->post('/me/medals', [MedalController::class, 'index']);
+$router->post('/tasks/claim', [GrowthController::class, 'claim']);
+$router->post('/tasks/submit', [GrowthController::class, 'submit']);
+$router->get('/growth', [GrowthController::class, 'index']); 
+$router->post('/growth/checkin', [GrowthController::class, 'checkin']);
+$router->post('/growth/claim', [GrowthController::class, 'claim']); 
+$router->post('/growth/submit', [GrowthController::class, 'submit']); 
+$router->get('/verification/apply', [VerificationController::class, 'apply']);
+$router->post('/verification/apply', [VerificationController::class, 'apply']);
+$router->post('/verification/revoke', [VerificationController::class, 'revoke']);
+$router->get('/settings', [UserController::class, 'settings']);
+$router->get('/settings/devices', [UserController::class, 'devices']);
+$router->post('/settings/devices', [UserController::class, 'devices']);
+$router->get('/settings/privacy', [UserController::class, 'privacySettings']);
+$router->post('/settings/privacy', [UserController::class, 'privacySettings']);
+$router->get('/notification-settings', [UserController::class, 'notificationSettings']);
+$router->post('/notification-settings', [UserController::class, 'notificationSettings']);
+$router->get('/me/edit', [UserController::class, 'editProfile']);
+$router->post('/me/edit', [UserController::class, 'editProfile']);
+$router->get('/logout', [UserController::class, 'logout']);
+$router->get('/cookie-policy', [\App\Controllers\Web\CookiePolicyController::class, 'show']);
+
+
+$router->get('/api/app/bootstrap', [\App\Controllers\Api\AppController::class, 'bootstrap']);
+$router->post('/api/app/login', [\App\Controllers\Api\AppController::class, 'login']);
+$router->post('/api/app/register', [\App\Controllers\Api\AppController::class, 'register']);
+$router->post('/api/app/logout', [\App\Controllers\Api\AppController::class, 'logout']);
+$router->get('/api/app/home', [\App\Controllers\Api\AppController::class, 'home']);
+$router->get('/api/app/sections', [\App\Controllers\Api\AppController::class, 'sections']);
+$router->get('/api/app/section', [\App\Controllers\Api\AppController::class, 'section']);
+$router->get('/api/app/thread', [\App\Controllers\Api\AppController::class, 'thread']);
+$router->get('/api/app/messages', [\App\Controllers\Api\AppController::class, 'messages']);
+$router->post('/api/app/publish', [\App\Controllers\Api\AppController::class, 'publish']);
+$router->post('/api/app/upload-image', [\App\Controllers\Api\AppController::class, 'uploadImage']);
+$router->get('/api/app/me', [\App\Controllers\Api\AppController::class, 'me']);
+
+
+$router->get('/api/users/search', [\App\Controllers\Api\UserSearchController::class, 'search']);
+
+
+$router->get('/api/messages/unread', [\App\Controllers\Api\MessageController::class, 'unread']);
+$router->get('/api/announcement/popup', [\App\Controllers\Api\AnnouncementController::class, 'popup']);
+$router->post('/api/announcement/read', [\App\Controllers\Api\AnnouncementController::class, 'read']);
+$router->get('/api/messages', [\App\Controllers\Api\MessageController::class, 'list']);
+$router->post('/api/messages/read', [\App\Controllers\Api\MessageController::class, 'markRead']);
+
+
+$router->get('/messages', [\App\Controllers\Web\MessageCenterController::class, 'index']);
+$router->post('/messages/clear-history', [\App\Controllers\Web\MessageCenterController::class, 'clearHistory']);
+
+
+$router->get('/api/private-chat/bootstrap', [\App\Controllers\Api\PrivateChatController::class, 'bootstrap']);
+$router->get('/api/private-chat/poll', [\App\Controllers\Api\PrivateChatController::class, 'poll']);
+$router->get('/api/private-chat/messages', [\App\Controllers\Api\PrivateChatController::class, 'messages']);
+$router->get('/api/private-chat/search', [\App\Controllers\Api\PrivateChatController::class, 'search']);
+$router->get('/api/private-chat/search-all', [\App\Controllers\Api\PrivateChatController::class, 'searchAll']);
+$router->post('/api/private-chat/send', [\App\Controllers\Api\PrivateChatController::class, 'send']);
+$router->post('/api/private-chat/send-image', [\App\Controllers\Api\PrivateChatController::class, 'sendImage']);
+$router->get('/api/private-chat/moments', [\App\Controllers\Api\PrivateChatController::class, 'moments']);
+$router->post('/api/private-chat/moments', [\App\Controllers\Api\PrivateChatController::class, 'publishMoment']);
+$router->post('/api/private-chat/moment-cover', [\App\Controllers\Api\PrivateChatController::class, 'momentCover']);
+$router->post('/api/private-chat/revoke', [\App\Controllers\Api\PrivateChatController::class, 'revoke']);
+$router->post('/api/private-chat/clear-revoked-content', [\App\Controllers\Api\PrivateChatController::class, 'clearRevokedContent']);
+$router->post('/api/private-chat/follow', [\App\Controllers\Api\PrivateChatController::class, 'follow']);
+$router->post('/api/private-chat/hide', [\App\Controllers\Api\PrivateChatController::class, 'hideConversation']);
+$router->post('/api/private-chat/pin', [\App\Controllers\Api\PrivateChatController::class, 'pinConversation']);
+$router->post('/api/private-chat/mute', [\App\Controllers\Api\PrivateChatController::class, 'muteConversation']);
+$router->post('/api/private-chat/report', [\App\Controllers\Api\PrivateChatController::class, 'reportMessage']);
+
+
+$router->get('/api/group-chat/bootstrap', [\App\Controllers\Api\GroupChatController::class, 'bootstrap']);
+$router->get('/api/group-chat/poll', [\App\Controllers\Api\GroupChatController::class, 'poll']);
+$router->get('/api/group-chat/messages', [\App\Controllers\Api\GroupChatController::class, 'messages']);
+$router->post('/api/group-chat/create', [\App\Controllers\Api\GroupChatController::class, 'create']);
+$router->post('/api/group-chat/send', [\App\Controllers\Api\GroupChatController::class, 'send']);
+$router->post('/api/group-chat/send-image', [\App\Controllers\Api\GroupChatController::class, 'sendImage']);
+$router->post('/api/group-chat/update', [\App\Controllers\Api\GroupChatController::class, 'update']);
+$router->post('/api/group-chat/upload-avatar', [\App\Controllers\Api\GroupChatController::class, 'uploadAvatar']);
+$router->post('/api/group-chat/member-settings', [\App\Controllers\Api\GroupChatController::class, 'memberSettings']);
+$router->post('/api/group-chat/clear-history', [\App\Controllers\Api\GroupChatController::class, 'clearHistory']);
+$router->post('/api/group-chat/leave', [\App\Controllers\Api\GroupChatController::class, 'leave']);
+$router->get('/api/group-chat/search', [\App\Controllers\Api\GroupChatController::class, 'search']);
+$router->post('/api/group-chat/member-action', [\App\Controllers\Api\GroupChatController::class, 'memberAction']);
+$router->post('/api/group-chat/revoke', [\App\Controllers\Api\GroupChatController::class, 'revoke']);
+$router->post('/api/group-chat/clear-revoked-content', [\App\Controllers\Api\GroupChatController::class, 'clearRevokedContent']);
+$router->post('/api/group-chat/invite', [\App\Controllers\Api\GroupChatController::class, 'invite']);
+$router->post('/api/group-chat/invite-handle', [\App\Controllers\Api\GroupChatController::class, 'handleInvite']);
+$router->get('/api/group-chat/search-groups', [\App\Controllers\Api\GroupChatController::class, 'searchGroups']);
+$router->post('/api/group-chat/join', [\App\Controllers\Api\GroupChatController::class, 'join']);
+$router->post('/api/group-chat/join-mode', [\App\Controllers\Api\GroupChatController::class, 'joinMode']);
+$router->get('/api/group-chat/pending-requests', [\App\Controllers\Api\GroupChatController::class, 'pendingRequests']);
+$router->post('/api/group-chat/review-join', [\App\Controllers\Api\GroupChatController::class, 'reviewJoinRequest']);
+$router->get('/api/group-chat/my-invites', [\App\Controllers\Api\GroupChatController::class, 'myInvites']);
+
+
+$router->get('/api/group-chat/report-messages', [\App\Controllers\Api\GroupReportController::class, 'messages']);
+$router->post('/api/group-chat/report', [\App\Controllers\Api\GroupReportController::class, 'submit']);
+$router->get('/api/group-chat/my-reports', [\App\Controllers\Api\GroupReportController::class, 'myReports']);
+
+
+$router->get('/software', [\App\Controllers\SoftwareStoreController::class, 'index']);
+$router->get('/software/show', [\App\Controllers\SoftwareStoreController::class, 'show']);
+$router->get('/software/download', [\App\Controllers\SoftwareStoreController::class, 'download']);
+$router->post('/software/rate', [\App\Controllers\SoftwareStoreController::class, 'rate']);
+$router->post('/software/review', [\App\Controllers\SoftwareStoreController::class, 'review']);
+$router->get('/software/submission', [\App\Controllers\SoftwareSubmissionController::class, 'index']);
+$router->post('/software/submission/create', [\App\Controllers\SoftwareSubmissionController::class, 'create']);
+$router->get('/software/submission/version', [\App\Controllers\SoftwareSubmissionController::class, 'versionForm']);
+$router->post('/software/submission/version', [\App\Controllers\SoftwareSubmissionController::class, 'createVersion']);
+$router->get('/software/submission/versions', [\App\Controllers\SoftwareSubmissionController::class, 'versionHistory']);
+$router->get('/software/submission/edit', [\App\Controllers\SoftwareSubmissionController::class, 'edit']);
+$router->post('/software/submission/update', [\App\Controllers\SoftwareSubmissionController::class, 'update']);
+
+\App\Core\Hook::fire('web.routes', ['router' => $router]);
